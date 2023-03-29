@@ -42,7 +42,7 @@ limitations under the License.
 #include "tensorflow/core/platform/setround.h"
 #include "tensorflow/core/profiler/lib/annotated_traceme.h"
 #include "tensorflow/core/profiler/lib/traceme.h"
-"//tensorflow/core/profiler:nvtx_utils",
+#include "tensorflow/core/profiler/nvtx_utils.h"
 #include "tensorflow/core/public/version.h"
 #include "tensorflow/core/util/tensor_slice_reader_cache.h"
 #if !defined(IS_MOBILE_PLATFORM)
