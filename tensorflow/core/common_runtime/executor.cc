@@ -25,6 +25,7 @@ limitations under the License.
 #include "tensorflow/core/common_runtime/executor_factory.h"
 #include "tensorflow/core/common_runtime/graph_view.h"
 #include "tensorflow/core/common_runtime/immutable_executor_state.h"
+#include "tensorflow/core/common_runtime/propagator_debug_utils.h"
 #include "tensorflow/core/common_runtime/metric_util.h"
 #include "tensorflow/core/common_runtime/pending_counts.h"
 #include "tensorflow/core/common_runtime/propagator_state.h"
