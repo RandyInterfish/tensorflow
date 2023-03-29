@@ -70,6 +70,7 @@ limitations under the License.
 #include "tensorflow/core/profiler/lib/connected_traceme.h"
 #include "tensorflow/core/profiler/lib/scoped_annotation.h"
 #include "tensorflow/core/profiler/lib/traceme_encode.h"
+#include "tensorflow/core/profiler/nvtx_utils.h"
 #include "tensorflow/core/protobuf/error_codes.pb.h"
 #include "tensorflow/core/util/tensor_slice_reader_cache.h"
 
@@ -777,6 +778,14 @@ void ExecutorState<PropagatorStateType>::Process(TaggedNode tagged_node,
     }
 
     Entry* first_input = propagator_.GetInputTensors(tagged_node);
+    nvtx::ScopedRangeIfEnabled<nvtx::CoreDomain> nvtx_range(
+        item.kernel->def().op(), [&]() {
+          return nvtx::GetNodeExecutionRangeMessage(
+              item.kernel, item.num_inputs, first_input,
+              [this](const Entry& entry) {
+                return GetTensorValueForDump(entry);
+              });
+        });
 
     // Only execute this node if it is not dead or it is a send/recv
     // transfer node. For transfer nodes, we need to propagate the "dead"

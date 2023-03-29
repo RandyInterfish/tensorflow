@@ -3455,7 +3455,9 @@ tf_kernel_library(
 tf_kernel_library(
     name = "segment_reduction_ops",
     prefix = "segment_reduction_ops",
-    deps = MATH_DEPS + if_cuda_or_rocm([
+    deps = [
+        "//tensorflow/core/profiler:nvtx_utils",
+    ] + MATH_DEPS + if_cuda_or_rocm([
         ":gpu_prim_helpers",
         "//tensorflow/core/util:cuda_solvers",
     ]),

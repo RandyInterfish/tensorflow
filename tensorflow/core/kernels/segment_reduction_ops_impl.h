@@ -40,6 +40,7 @@ limitations under the License.
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/util/determinism.h"
 #include "tensorflow/core/util/util.h"
+#include "tensorflow/core/profiler/nvtx_utils.h"
 
 #if GOOGLE_CUDA || TENSORFLOW_USE_ROCM
 #include "tensorflow/core/common_runtime/gpu/gpu_event_mgr.h"
@@ -276,8 +277,9 @@ class SegmentReductionGPUOp : public AsyncOpKernel {
         done);
 
     SegmentReductionFunctor functor_;
-    auto create_and_check_output = [context, output_rows_host, &input,
+    auto create_and_check_output = [this, context, output_rows_host, &input,
                                     &segment_ids, &functor_, done]() {
+      nvtx::ScopedRangeIfEnabled<nvtx::CoreDomain> nvtx_range(this);
       // Ensure that within the callback, the proper GPU settings are
       // configured.
       auto stream = context->op_device_context()->stream();

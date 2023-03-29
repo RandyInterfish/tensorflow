@@ -24,6 +24,17 @@ package_group(
     ],
 )
 
+cc_library(
+    name = "nvtx_utils",
+    srcs = ["nvtx_utils.cc",],
+    hdrs = ["nvtx_utils.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+      "//tensorflow/core:framework",
+      "@nvtx_archive//:nvtx",
+    ],
+)
+
 tf_proto_library(
     name = "profiler_service_monitor_result_proto",
     srcs = ["profiler_service_monitor_result.proto"],

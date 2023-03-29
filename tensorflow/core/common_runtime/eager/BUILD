@@ -434,6 +434,7 @@ tf_cuda_library(
     ],
     visibility = ["//tensorflow:internal"],
     deps = [
+        "//tensorflow/core/profiler:nvtx_utils",
         ":attr_builder",
         "@com_google_absl//absl/container:flat_hash_map",
         "@com_google_absl//absl/strings",

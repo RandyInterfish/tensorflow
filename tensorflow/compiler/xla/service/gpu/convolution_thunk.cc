@@ -26,6 +26,7 @@ limitations under the License.
 #include "tensorflow/compiler/xla/util.h"
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/platform/stream_executor_no_cuda.h"
+#include "tensorflow/core/profiler/nvtx_utils.h"
 
 namespace xla {
 namespace gpu {
@@ -53,6 +54,12 @@ Status ConvolutionThunk::ExecuteOnStream(const ExecuteParams& params) {
 
   se::DeviceMemoryBase scratch =
       buffer_allocations.GetDeviceAddress(scratch_buffer_);
+
+  tensorflow::nvtx::ScopedRangeIfEnabled<tensorflow::nvtx::CoreDomain>
+      nvtx_range(config_.op_type, [&]() {
+        return tensorflow::nvtx::GetThunkExecutionRangeMessage(
+            config_.cluster_name, config_.op_name, config_.op_type);
+      });
 
   auto op_profiler =
       params.profiler->MakeScopedInstructionProfiler(profile_index());

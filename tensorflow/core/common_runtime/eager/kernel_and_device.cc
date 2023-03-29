@@ -42,6 +42,7 @@ limitations under the License.
 #include "tensorflow/core/platform/setround.h"
 #include "tensorflow/core/profiler/lib/annotated_traceme.h"
 #include "tensorflow/core/profiler/lib/traceme.h"
+"//tensorflow/core/profiler:nvtx_utils",
 #include "tensorflow/core/public/version.h"
 #include "tensorflow/core/util/tensor_slice_reader_cache.h"
 #if !defined(IS_MOBILE_PLATFORM)
@@ -293,6 +294,14 @@ Status KernelAndDeviceOp::Run(
   OpKernelContext context(&params);
 
   {
+    nvtx::ScopedRangeIfEnabled<nvtx::CoreDomain> nvtx_range(
+        kernel_->def().op(), [&]() {
+          return nvtx::GetNodeExecutionRangeMessage(
+              kernel_.get(), inputs.GetTensorValues()->size(),
+              *inputs.GetTensorValues(), [](const TensorValue& tensor_value) {
+                return tensor_value.tensor;
+              });
+        });
     port::ScopedFlushDenormal flush;
     port::ScopedSetRound round(FE_TONEAREST);
     // 'AnnotatedTraceMe' will trace both scheduling time on host and execution

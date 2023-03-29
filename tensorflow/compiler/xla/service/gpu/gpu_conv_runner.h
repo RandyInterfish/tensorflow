@@ -75,6 +75,9 @@ struct GpuConvConfig {
   Shape input_shape;
   Shape filter_shape;
   Shape output_shape;
+  string cluster_name;  // Needed for NVTX range
+  string op_name;       // Needed for NVTX range
+  string op_type;       // Needed for NVTX range
   absl::optional<FusionConfig> fusion;
 };
 
@@ -128,6 +131,9 @@ struct GpuConvDescriptor {
   Shape operand0_shape;
   Shape operand1_shape;
   Shape result_shape;
+  string cluster_name;  // Needed for NVTX range
+  string op_name;       // Needed for NVTX range
+  string op_type;       // Needed for NVTX range
   size_t scratch_size;
   Window window;
   ConvolutionDimensionNumbers dnums;
